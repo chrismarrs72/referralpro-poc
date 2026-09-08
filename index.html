@@ -8,125 +8,56 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
   <style>
     :root {
-      --navy: #163a6b;
-      --navy-deep: #0f2b52;
-      --navy-mid: #1b4f8a;
-      --gold: #f0c419;
-      --ink: #1a2b44;
-      --muted: #6b7c93;
-      --line: #d7deea;
-      --bg: #f4f7fb;
-      --card: #ffffff;
+      --navy: #163a6b; --navy-deep: #0f2b52; --navy-mid: #1b4f8a; --gold: #f0c419;
+      --ink: #1a2b44; --muted: #6b7c93; --line: #d7deea; --bg: #f4f7fb; --card: #ffffff;
     }
     * { box-sizing: border-box; }
     html, body { margin: 0; padding: 0; font-family: Inter, system-ui, sans-serif; color: var(--ink); background: var(--bg); }
     a { color: var(--navy); text-decoration: none; }
     button { font-family: inherit; cursor: pointer; }
-    .poc-bar {
-      background: #111827; color: #e5e7eb; font-size: 12px; padding: 8px 16px;
-      display: flex; gap: 10px; align-items: center; flex-wrap: wrap;
-    }
+    .poc-bar { background: #111827; color: #e5e7eb; font-size: 12px; padding: 8px 16px; display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
     .poc-bar b { color: var(--gold); font-weight: 600; }
-    .poc-bar a, .poc-bar button.link {
-      color: #fff; background: #374151; border: 0; border-radius: 999px;
-      padding: 4px 10px; font-size: 11px;
-    }
+    .poc-bar a, .poc-bar button.link { color: #fff; background: #374151; border: 0; border-radius: 999px; padding: 4px 10px; font-size: 11px; }
     .poc-bar button.link.on { background: var(--navy-mid); }
-    .poc-hint {
-      background: #1f2937; color: #fde68a; font-size: 12px; padding: 8px 16px; line-height: 1.35;
-    }
+    .poc-hint { background: #1f2937; color: #fde68a; font-size: 12px; padding: 8px 16px; line-height: 1.35; }
     [data-tip] { position: relative; }
-    [data-tip]:hover::after,
-    [data-tip]:focus-visible::after {
-      content: attr(data-tip);
-      position: absolute;
-      left: 0;
-      top: calc(100% + 8px);
-      z-index: 50;
-      background: #111827;
-      color: #fff;
-      font-size: 12px;
-      font-weight: 400;
-      line-height: 1.35;
-      padding: 8px 10px;
-      border-radius: 8px;
-      width: max(220px, 100%);
-      max-width: 280px;
-      box-shadow: 0 8px 24px rgba(0,0,0,.25);
-      white-space: pre-wrap;
-      pointer-events: none;
+    [data-tip]:hover::after, [data-tip]:focus-visible::after {
+      content: attr(data-tip); position: absolute; left: 0; top: calc(100% + 8px); z-index: 50;
+      background: #111827; color: #fff; font-size: 12px; font-weight: 400; line-height: 1.35;
+      padding: 8px 10px; border-radius: 8px; width: max(220px, 100%); max-width: 280px;
+      box-shadow: 0 8px 24px rgba(0,0,0,.25); white-space: pre-wrap; pointer-events: none;
     }
-    header.site {
-      background: #fff; display: flex; align-items: center; justify-content: space-between;
-      padding: 12px 28px; gap: 16px; border-bottom: 1px solid var(--line);
-    }
-    .logo {
-      width: 92px; height: 92px; border-radius: 50%; background: #fff;
-      box-shadow: 0 8px 24px rgba(22,58,107,.12); display: flex; align-items: center;
-      justify-content: center; text-align: center; color: var(--navy); font-weight: 700;
-      font-size: 11px; line-height: 1.15; padding: 10px;
-    }
+    .poc-bar [data-tip]:hover::after, .poc-bar [data-tip]:focus-visible::after { content: none; }
+    header.site { background: #fff; display: flex; align-items: center; justify-content: space-between; padding: 12px 28px; gap: 16px; border-bottom: 1px solid var(--line); }
+    .logo { width: 92px; height: 92px; border-radius: 50%; background: #fff; box-shadow: 0 8px 24px rgba(22,58,107,.12); display: flex; align-items: center; justify-content: center; text-align: center; color: var(--navy); font-weight: 700; font-size: 11px; line-height: 1.15; padding: 10px; }
     nav.main { display: flex; gap: 22px; color: var(--navy); font-size: 14px; }
-    .btn-outline {
-      border: 1px solid var(--navy); color: var(--navy); background: #fff;
-      border-radius: 10px; padding: 10px 16px; font-weight: 600;
-    }
-    .hero {
-      background: linear-gradient(180deg, #163a6b 0%, #0f2b52 100%);
-      background-image: linear-gradient(rgba(15,43,82,.78), rgba(15,43,82,.78)),
-        repeating-linear-gradient(0deg, transparent, transparent 31px, rgba(255,255,255,.04) 32px),
-        repeating-linear-gradient(90deg, transparent, transparent 31px, rgba(255,255,255,.04) 32px);
-      min-height: 520px; display: flex; align-items: center; justify-content: center;
-      padding: 48px 16px 72px; position: relative;
-    }
-    .quote {
-      position: absolute; left: 24px; top: 28px; background: #fff; border-radius: 12px;
-      padding: 12px 14px; width: 210px; font-size: 13px; box-shadow: 0 8px 24px rgba(0,0,0,.15);
-    }
+    .btn-outline { border: 1px solid var(--navy); color: var(--navy); background: #fff; border-radius: 10px; padding: 10px 16px; font-weight: 600; }
+    .hero { background: linear-gradient(180deg, #163a6b 0%, #0f2b52 100%); background-image: linear-gradient(rgba(15,43,82,.78), rgba(15,43,82,.78)), repeating-linear-gradient(0deg, transparent, transparent 31px, rgba(255,255,255,.04) 32px), repeating-linear-gradient(90deg, transparent, transparent 31px, rgba(255,255,255,.04) 32px); min-height: 520px; display: flex; align-items: center; justify-content: center; padding: 48px 16px 72px; position: relative; }
+    .quote { position: absolute; left: 24px; top: 28px; background: #fff; border-radius: 12px; padding: 12px 14px; width: 210px; font-size: 13px; box-shadow: 0 8px 24px rgba(0,0,0,.15); }
     .stars { color: #f5b301; letter-spacing: 1px; }
     .quote .who { color: var(--muted); font-size: 11px; margin-top: 6px; }
-    .search-card {
-      background: #fff; border-radius: 18px; padding: 22px; width: min(460px, 92vw);
-      box-shadow: 0 16px 40px rgba(0,0,0,.18);
-    }
+    .search-card { background: #fff; border-radius: 18px; padding: 22px; width: min(460px, 92vw); box-shadow: 0 16px 40px rgba(0,0,0,.18); }
     .search-card h2 { margin: 0 0 16px; color: var(--navy); font-size: 22px; display: flex; gap: 10px; align-items: center; }
-    .badge-ico {
-      width: 32px; height: 32px; border-radius: 10px; background: var(--navy);
-      color: #fff; display: inline-flex; align-items: center; justify-content: center; font-size: 16px;
-    }
-    label.field {
-      display: block; background: #f3f6fb; border: 1px solid #c9d6ea; border-radius: 12px;
-      padding: 8px 12px 10px; margin-bottom: 10px;
-    }
+    .badge-ico { width: 32px; height: 32px; border-radius: 10px; background: var(--navy); color: #fff; display: inline-flex; align-items: center; justify-content: center; font-size: 16px; }
+    label.field { display: block; background: #f3f6fb; border: 1px solid #c9d6ea; border-radius: 12px; padding: 8px 12px 10px; margin-bottom: 10px; }
     label.field span { display: block; font-size: 10px; letter-spacing: .06em; color: #8b9bb0; font-weight: 600; }
-    select, input[type=text], input[type=email], input[type=tel] {
-      width: 100%; border: 0; background: transparent; font-size: 16px; color: var(--ink); outline: none;
-    }
-    .btn-navy {
-      width: 100%; background: var(--navy); color: #fff; border: 0; border-radius: 12px;
-      padding: 12px 16px; font-weight: 600; font-size: 15px; margin-top: 6px;
-    }
+    select, input[type=text], input[type=email], input[type=tel] { width: 100%; border: 0; background: transparent; font-size: 16px; color: var(--ink); outline: none; }
+    .btn-navy { width: 100%; background: var(--navy); color: #fff; border: 0; border-radius: 12px; padding: 12px 16px; font-weight: 600; font-size: 15px; margin-top: 6px; }
     .btn-navy:disabled { opacity: .5; }
     .presets { display: flex; gap: 8px; flex-wrap: wrap; margin: 10px 0 4px; }
-    .presets button {
-      border: 1px dashed #b7c5d8; background: #fff; color: var(--navy); border-radius: 999px;
-      font-size: 11px; padding: 5px 10px;
-    }
+    .presets button { border: 1px dashed #b7c5d8; background: #fff; color: var(--navy); border-radius: 999px; font-size: 11px; padding: 5px 10px; }
     .market { padding: 48px 16px 64px; text-align: center; }
     .market h2 { color: var(--navy); margin: 0 0 6px; }
     .market .sub { color: var(--muted); margin-bottom: 24px; }
     .cards { display: flex; justify-content: center; gap: 16px; flex-wrap: wrap; }
-    .agent-card {
-      background: #fff; border-radius: 16px; padding: 20px 16px; width: 210px;
-      box-shadow: 0 6px 20px rgba(22,58,107,.08);
-    }
-    .avatar {
-      width: 72px; height: 72px; border-radius: 50%; margin: 0 auto 10px;
-      background: #dbe7f5; display: flex; align-items: center; justify-content: center;
-      color: var(--navy); font-weight: 700;
-    }
+    .agent-card { background: #fff; border-radius: 16px; padding: 20px 16px; width: 210px; box-shadow: 0 6px 20px rgba(22,58,107,.08); }
+    .avatar { width: 72px; height: 72px; border-radius: 50%; margin: 0 auto 10px; background: #dbe7f5; display: flex; align-items: center; justify-content: center; color: var(--navy); font-weight: 700; }
     .chip { display: inline-block; background: #eef3fb; color: var(--navy); border-radius: 999px; font-size: 11px; padding: 4px 8px; margin-top: 6px; }
     .fine { font-size: 11px; color: var(--muted); font-style: italic; margin-top: 18px; }
+    .steps { background: #f4f7fb; border: 1px solid var(--line); border-radius: 12px; padding: 12px 14px; font-size: 13px; margin: 0 0 16px; color: var(--ink); }
+    .steps b { color: var(--navy); }
+    .steps ol { margin: 8px 0 0; padding-left: 18px; }
+    .steps li { margin: 4px 0; }
     main.page { max-width: 1100px; margin: 0 auto; padding: 28px 16px 80px; }
     .grid2 { display: grid; grid-template-columns: 1.1fr .9fr; gap: 18px; }
     @media (max-width: 860px) { .grid2 { grid-template-columns: 1fr; } header.site { flex-wrap: wrap; } .logo { width: 72px; height: 72px; } }
@@ -152,19 +83,19 @@
 </head>
 <body>
   <div class="poc-bar">
-    <b data-tip="Does not write to live GHL. Seed seats only.">POC</b>
+    <b>POC</b>
     <span>Does not write to live GHL. Seed data only.</span>
-    <button class="link" data-beat="1" data-tip="Empty seat. Fills Hennepin Individual Health. Next: press Find.">1 House</button>
-    <button class="link" data-beat="2" data-tip="Live proof row. Fills Hennepin Group Health. Next: press Find.">2 EMS</button>
-    <button class="link" data-beat="3" data-tip="Specialist sees the last referral. Empty if you have not submitted.">3 Accept</button>
-    <button class="link" data-beat="4" data-tip="Same resolver. Source is agent, not WIE.">4 Agent ref</button>
+    <button class="link" data-beat="1" data-tip="Step 1. Loads empty-seat Individual Health. Stay on Home and press Find.">1 House</button>
+    <button class="link" data-beat="2" data-tip="Step 2. Loads the live EMS Group Health row. Stay on Home and press Find.">2 EMS</button>
+    <button class="link" data-beat="3" data-tip="Step 3. Specialist inbox for the referral you just created. Run 1 or 2 and Find first.">3 Accept</button>
+    <button class="link" data-beat="4" data-tip="Step 4. Agent-to-agent. Mike sends a Health Individual lead he does not hold.">4 Agent ref</button>
     <button class="link" data-beat="5" data-tip="The two rows the resolver can hit. Not the 378.">5 Seats</button>
     <button class="link" data-beat="6" data-tip="Future leads only. Historic referrals stay put.">6 Replace</button>
     <button class="link" data-beat="7" data-tip="Platform is source of record. GHL is the echo.">7 Records</button>
     <button class="link" data-beat="8" data-tip="Locked 24 / 48 / 72 window and catalogue. Display only.">8 Admin</button>
     <button class="link" data-beat="9" data-tip="Counts from this tab only. Zero until you submit.">9 Measure</button>
   </div>
-  <div class="poc-hint" id="pocHint" data-idle="Hover a Beat chip or Find to see what happens next.">Hover a Beat chip or Find to see what happens next.</div>
+  <div class="poc-hint" id="pocHint" data-idle="Start on Home. Beat 1 or Beat 2, then Find. Then 3 Accept.">Start on Home. Beat 1 or Beat 2, then Find. Then 3 Accept.</div>
   <header class="site">
     <div class="logo">WeInsure<br/>Everything.Com<br/><span style="font-weight:500;font-size:9px">Yes, eeeverything!</span></div>
     <nav class="main">
@@ -178,6 +109,6 @@
   </header>
   <div id="app"></div>
   <footer class="site">We Insure Everything LLC. POC for ReferralPro Sprint 1. Not the live site.</footer>
-  <script src="app.js"></script>
+  <script src="app.js?v=34"></script>
 </body>
 </html>
