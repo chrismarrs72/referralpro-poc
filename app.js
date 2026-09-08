@@ -19,6 +19,11 @@ const state = {
   referrals: [],
   req: 61000
 };
+function setHint(text) {
+  const box = document.getElementById("pocHint");
+  if (!box) return;
+  box.textContent = text || box.dataset.idle;
+}
 function norm(s) { return (s || "").toLowerCase().replace(/,\s*mn$/, "").replace(/,\s*fl$/, "").trim(); }
 function nextId() { state.req += 1; return "WIE-REQ-" + state.req; }
 function resolve(f) {
@@ -53,10 +58,13 @@ function submitForm() {
 function preset(kind) {
   if (kind === "house") {
     state.form = { state: "Minnesota", county: "Hennepin", category: "Health & Medical Insurance", product: "Health, Individual", name: "Chris TEST Hennepin Health", email: "chris@chrismarrscto.com", phone: "(612) 555-0199" };
+    setHint("Form filled. Empty seat. Next: press Find My Specialist.");
   } else if (kind === "ems") {
     state.form = { state: "Minnesota", county: "Hennepin", category: "Business & Commercial Insurance", product: "Group Health, Major Medical", name: "Chris TEST Hennepin Group", email: "chris@chrismarrscto.com", phone: "(612) 555-0199" };
+    setHint("Form filled. Live EMS row. Next: press Find My Specialist.");
   } else if (kind === "mia") {
     state.form = { state: "Florida", county: "Miami-Dade", category: "Health & Medical Insurance", product: "Health, Individual", name: "Chris TEST Florida Health", email: "chris@chrismarrscto.com", phone: "(305) 555-0199" };
+    setHint("Form filled. Storyboard Miami-Dade seat. Next: press Find My Specialist.");
   }
   render();
 }
@@ -64,13 +72,16 @@ function headerSearch() {
   const f = state.form;
   const cats = Object.keys(LOB);
   const products = f.category ? LOB[f.category] : [];
+  const findTip = (!f.category || !f.product)
+    ? "Pick a category and a product, or use a Beat chip."
+    : "Resolver uses State + County + Category + Product. One result. Not three cards.";
   return `
     <div class="search-card">
       <h2><span class="badge-ico">Q</span> Find My Specialist</h2>
       <div class="presets">
-        <button type="button" onclick="preset('house')">Beat 1: Hennepin Individual Health</button>
-        <button type="button" onclick="preset('ems')">Beat 2: Hennepin Group Health</button>
-        <button type="button" onclick="preset('mia')">Miami-Dade Individual Health</button>
+        <button type="button" data-tip="Empty seat. After Find: We'll assign a specialist. Lead still goes to EMS. Next: press Find." onclick="preset('house')">Beat 1: Hennepin Individual Health</button>
+        <button type="button" data-tip="Live proof row. After Find: Mikell / EMS. Territory MN-HENNEPIN-GROUP_HEALTH. Next: press Find." onclick="preset('ems')">Beat 2: Hennepin Group Health</button>
+        <button type="button" data-tip="Storyboard seed, not last night's proof row. After Find: EMS as Primary." onclick="preset('mia')">Miami-Dade Individual Health</button>
       </div>
       <label class="field"><span>STATE</span>
         <select onchange="state.form.state=this.value;render()">
@@ -99,7 +110,7 @@ function headerSearch() {
       <label class="field"><span>NAME</span><input type="text" value="${f.name}" oninput="state.form.name=this.value" /></label>
       <label class="field"><span>EMAIL</span><input type="email" value="${f.email}" oninput="state.form.email=this.value" /></label>
       <label class="field"><span>PHONE</span><input type="tel" value="${f.phone}" oninput="state.form.phone=this.value" /></label>
-      <button class="btn-navy" ${(!f.category||!f.product)?"disabled":""} onclick="submitForm()">Find My Specialist</button>
+      <button class="btn-navy" data-tip="${findTip}" ${(!f.category||!f.product)?"disabled":""} onclick="submitForm()">Find My Specialist</button>
     </div>`;
 }
 function pageHome() {
@@ -123,10 +134,13 @@ function pageResult() {
   const rec = state.last;
   if (!rec) return `<main class="page"><div class="panel">No referral yet. <a href="#/">Go to intake.</a></div></main>`;
   const house = rec.result === "house";
+  const headTip = house
+    ? "Empty seat, not a dead end. Referral is with EMS. No fake card. Next: Specialist accept."
+    : "Active Primary. Same agent the referral is created for. Next: Specialist accept.";
   return `<main class="page"><div class="grid2">
     <div class="panel">
-      <p class="tag ${house?"house":"primary"}">${house ? "We'll assign a specialist" : "Assigned specialist"}</p>
-      <h1>${house ? "We'll assign a specialist." : rec.dest.agent}</h1>
+      <p class="tag ${house?"house":"primary"}" data-tip="${headTip}">${house ? "We'll assign a specialist" : "Assigned specialist"}</p>
+      <h1 data-tip="${headTip}">${house ? "We'll assign a specialist." : rec.dest.agent}</h1>
       <p>${house
         ? "No Active Primary on this county + category. Your request is with House (EMS). You will hear from someone. This is not a dropped lead."
         : rec.dest.agency + " · " + rec.dest.role + " · " + rec.dest.agentId}</p>
@@ -137,8 +151,8 @@ function pageResult() {
       </div>
       <p class="fine">No Position 1 / Backup labels. One result.</p>
       <div class="walk">
-        <a class="btn-outline" href="#/accept">Specialist accept</a>
-        <a class="btn-outline" href="#/routing">Routing log</a>
+        <a class="btn-outline" data-tip="Opens the agent view of this same referral." href="#/accept">Specialist accept</a>
+        <a class="btn-outline" data-tip="Why it went Primary or House." href="#/routing">Routing log</a>
       </div>
     </div>
     <div class="panel">
@@ -162,8 +176,8 @@ function pageAccept() {
     ${rec ? `<p>${rec.county}, ${rec.state} · ${rec.product}</p>
     <p>Assigned to ${rec.dest.agent} / ${rec.dest.agency}. Email + SMS with this id (mocked).</p>
     <div class="walk">
-      <button class="btn-navy" style="width:auto" onclick="var r=state.last; if(r){r.status='accepted';state.log.unshift({t:new Date().toISOString(),ev:'referral.accepted',id:r.id});}render()">Accept</button>
-      <button class="btn-outline" onclick="var r=state.last; if(r){r.status='rejected';state.log.unshift({t:new Date().toISOString(),ev:'referral.rejected',id:r.id,note:'poor fit to state + category RR'});}render()">Reject, poor fit</button>
+      <button class="btn-navy" style="width:auto" data-tip="Starts the 24 / 48 / 72 clock." onclick="var r=state.last; if(r){r.status='accepted';state.log.unshift({t:new Date().toISOString(),ev:'referral.accepted',id:r.id}); setHint('Accepted. Clock started.');}render()">Accept</button>
+      <button class="btn-outline" data-tip="Back to statewide agents in this category. Not a drop." onclick="var r=state.last; if(r){r.status='rejected';state.log.unshift({t:new Date().toISOString(),ev:'referral.rejected',id:r.id,note:'poor fit to state + category RR'}); setHint('Rejected. Goes to statewide round-robin.');}render()">Reject, poor fit</button>
     </div>
     <p>Status now: <b>${rec.status}</b></p>
     <p class="fine">24 / 48 / 72 window. At 72 hours or reject, statewide round-robin in this category.</p>` : `<p>Submit a referral first.</p>`}
@@ -173,7 +187,7 @@ function pageA2A() {
   return `<main class="page"><div class="panel">
     <h1>Agent-to-agent referral</h1>
     <p>Same record type. Source = agent. Credit stays with the referring agent. Destination follows the same resolver.</p>
-    <button class="btn-navy" style="width:auto" onclick="const f={state:'Minnesota',county:'Hennepin',category:'Health & Medical Insurance',product:'Health, Individual'}; const r=resolve(f); const id=nextId(); state.referrals.unshift({id,source:'agent-to-agent',referring:'RP-A0001',...f,result:r.kind,dest:r.seat,status:'assigned-house',name:'A2A sample'}); state.log.unshift({t:new Date().toISOString(),ev:'referral.created',id,source:'agent'}); state.last=state.referrals[0]; location.hash='#/result'; render();">Send a Health Individual referral Mike does not hold</button>
+    <button class="btn-navy" style="width:auto" data-tip="Agent-to-agent. Credit stays with the sender. Resolver still sends Individual Health to House." onclick="const f={state:'Minnesota',county:'Hennepin',category:'Health & Medical Insurance',product:'Health, Individual'}; const r=resolve(f); const id=nextId(); state.referrals.unshift({id,source:'agent-to-agent',referring:'RP-A0001',...f,result:r.kind,dest:r.seat,status:'assigned-house',name:'A2A sample'}); state.log.unshift({t:new Date().toISOString(),ev:'referral.created',id,source:'agent'}); state.last=state.referrals[0]; location.hash='#/result'; render();">Send a Health Individual referral Mike does not hold</button>
   </div></main>`;
 }
 function pageTerritory() {
@@ -200,7 +214,7 @@ function pageReplace() {
     <h1>Replace a seat</h1>
     <p>Miami-Dade Individual Health. Historic referrals stay with the writing agent. Future leads move.</p>
     <p>Current Primary: ${seat ? seat.agent + " / " + seat.agency : "none"}</p>
-    <button class="btn-navy" style="width:auto" onclick="const s=state.seats.find(x=>x.id==='FL-MIAMI-DADE-HEALTH_INDIVIDUAL'); if(s){s.agent='Buyer Agency';s.agency='RP-A0002';s.agentId='RP-A0002';} state.log.unshift({t:new Date().toISOString(),ev:'assignment.replaced',id:'FL-MIAMI-DADE-HEALTH_INDIVIDUAL',note:'future leads only'}); render();">Replace EMS with RP-A0002</button>
+    <button class="btn-navy" style="width:auto" data-tip="Next Miami-Dade Individual Health lead goes to the buyer. Old referrals stay with EMS." onclick="const s=state.seats.find(x=>x.id==='FL-MIAMI-DADE-HEALTH_INDIVIDUAL'); if(s){s.agent='Buyer Agency';s.agency='RP-A0002';s.agentId='RP-A0002';} state.log.unshift({t:new Date().toISOString(),ev:'assignment.replaced',id:'FL-MIAMI-DADE-HEALTH_INDIVIDUAL',note:'future leads only'}); setHint('Seat replaced. Future leads only.'); render();">Replace EMS with RP-A0002</button>
     <p class="fine">Do not run this on a live sold membership. Storyboard buyer is fictitious.</p>
   </div></main>`;
 }
@@ -281,6 +295,16 @@ document.querySelector(".poc-bar").addEventListener("click", (e) => {
   };
   go[b]();
   render();
+});
+document.addEventListener("mouseover", (e) => {
+  const el = e.target.closest("[data-tip]");
+  if (el) setHint(el.getAttribute("data-tip"));
+});
+document.addEventListener("mouseout", (e) => {
+  const el = e.target.closest("[data-tip]");
+  if (!el) return;
+  const next = e.relatedTarget && e.relatedTarget.closest && e.relatedTarget.closest("[data-tip]");
+  if (!next) setHint();
 });
 window.addEventListener("hashchange", render);
 render();
