@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>WeInsureEverything POC</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --navy: #163a6b;
+      --navy-deep: #0f2b52;
+      --navy-mid: #1b4f8a;
+      --gold: #f0c419;
+      --ink: #1a2b44;
+      --muted: #6b7c93;
+      --line: #d7deea;
+      --bg: #f4f7fb;
+      --card: #ffffff;
+    }
+    * { box-sizing: border-box; }
+    html, body { margin: 0; padding: 0; font-family: Inter, system-ui, sans-serif; color: var(--ink); background: var(--bg); }
+    a { color: var(--navy); text-decoration: none; }
+    button { font-family: inherit; cursor: pointer; }
+    .poc-bar {
+      background: #111827; color: #e5e7eb; font-size: 12px; padding: 8px 16px;
+      display: flex; gap: 10px; align-items: center; flex-wrap: wrap;
+    }
+    .poc-bar b { color: var(--gold); font-weight: 600; }
+    .poc-bar a, .poc-bar button.link {
+      color: #fff; background: #374151; border: 0; border-radius: 999px;
+      padding: 4px 10px; font-size: 11px;
+    }
+    .poc-bar button.link.on { background: var(--navy-mid); }
+    header.site {
+      background: #fff; display: flex; align-items: center; justify-content: space-between;
+      padding: 12px 28px; gap: 16px; border-bottom: 1px solid var(--line);
+    }
+    .logo {
+      width: 92px; height: 92px; border-radius: 50%; background: #fff;
+      box-shadow: 0 8px 24px rgba(22,58,107,.12); display: flex; align-items: center;
+      justify-content: center; text-align: center; color: var(--navy); font-weight: 700;
+      font-size: 11px; line-height: 1.15; padding: 10px;
+    }
+    nav.main { display: flex; gap: 22px; color: var(--navy); font-size: 14px; }
+    .btn-outline {
+      border: 1px solid var(--navy); color: var(--navy); background: #fff;
+      border-radius: 10px; padding: 10px 16px; font-weight: 600;
+    }
+    .hero {
+      background: linear-gradient(180deg, #163a6b 0%, #0f2b52 100%);
+      background-image: linear-gradient(rgba(15,43,82,.78), rgba(15,43,82,.78)),
+        repeating-linear-gradient(0deg, transparent, transparent 31px, rgba(255,255,255,.04) 32px),
+        repeating-linear-gradient(90deg, transparent, transparent 31px, rgba(255,255,255,.04) 32px);
+      min-height: 520px; display: flex; align-items: center; justify-content: center;
+      padding: 48px 16px 72px; position: relative;
+    }
+    .quote {
+      position: absolute; left: 24px; top: 28px; background: #fff; border-radius: 12px;
+      padding: 12px 14px; width: 210px; font-size: 13px; box-shadow: 0 8px 24px rgba(0,0,0,.15);
+    }
+    .stars { color: #f5b301; letter-spacing: 1px; }
+    .quote .who { color: var(--muted); font-size: 11px; margin-top: 6px; }
+    .search-card {
+      background: #fff; border-radius: 18px; padding: 22px; width: min(460px, 92vw);
+      box-shadow: 0 16px 40px rgba(0,0,0,.18);
+    }
+    .search-card h2 { margin: 0 0 16px; color: var(--navy); font-size: 22px; display: flex; gap: 10px; align-items: center; }
+    .badge-ico {
+      width: 32px; height: 32px; border-radius: 10px; background: var(--navy);
+      color: #fff; display: inline-flex; align-items: center; justify-content: center; font-size: 16px;
+    }
+    label.field {
+      display: block; background: #f3f6fb; border: 1px solid #c9d6ea; border-radius: 12px;
+      padding: 8px 12px 10px; margin-bottom: 10px;
+    }
+    label.field span { display: block; font-size: 10px; letter-spacing: .06em; color: #8b9bb0; font-weight: 600; }
+    select, input[type=text], input[type=email], input[type=tel] {
+      width: 100%; border: 0; background: transparent; font-size: 16px; color: var(--ink); outline: none;
+    }
+    .btn-navy {
+      width: 100%; background: var(--navy); color: #fff; border: 0; border-radius: 12px;
+      padding: 12px 16px; font-weight: 600; font-size: 15px; margin-top: 6px;
+    }
+    .btn-navy:disabled { opacity: .5; }
+    .presets { display: flex; gap: 8px; flex-wrap: wrap; margin: 10px 0 4px; }
+    .presets button {
+      border: 1px dashed #b7c5d8; background: #fff; color: var(--navy); border-radius: 999px;
+      font-size: 11px; padding: 5px 10px;
+    }
+    .market { padding: 48px 16px 64px; text-align: center; }
+    .market h2 { color: var(--navy); margin: 0 0 6px; }
+    .market .sub { color: var(--muted); margin-bottom: 24px; }
+    .cards { display: flex; justify-content: center; gap: 16px; flex-wrap: wrap; }
+    .agent-card {
+      background: #fff; border-radius: 16px; padding: 20px 16px; width: 210px;
+      box-shadow: 0 6px 20px rgba(22,58,107,.08);
+    }
+    .avatar {
+      width: 72px; height: 72px; border-radius: 50%; margin: 0 auto 10px;
+      background: #dbe7f5; display: flex; align-items: center; justify-content: center;
+      color: var(--navy); font-weight: 700;
+    }
+    .chip { display: inline-block; background: #eef3fb; color: var(--navy); border-radius: 999px; font-size: 11px; padding: 4px 8px; margin-top: 6px; }
+    .fine { font-size: 11px; color: var(--muted); font-style: italic; margin-top: 18px; }
+    main.page { max-width: 1100px; margin: 0 auto; padding: 28px 16px 80px; }
+    .grid2 { display: grid; grid-template-columns: 1.1fr .9fr; gap: 18px; }
+    @media (max-width: 860px) { .grid2 { grid-template-columns: 1fr; } header.site { flex-wrap: wrap; } .logo { width: 72px; height: 72px; } }
+    .panel { background: #fff; border-radius: 16px; padding: 20px; box-shadow: 0 6px 20px rgba(22,58,107,.06); }
+    .panel h1, .panel h2 { color: var(--navy); margin-top: 0; }
+    .kvs { font-size: 13px; }
+    .kvs div { display: flex; justify-content: space-between; gap: 12px; padding: 7px 0; border-bottom: 1px solid var(--line); }
+    .kvs b { font-weight: 600; color: var(--muted); }
+    .tag { display: inline-block; border-radius: 999px; padding: 3px 8px; font-size: 11px; font-weight: 600; }
+    .tag.house { background: #fff4d6; color: #8a6d00; }
+    .tag.primary { background: #e3f6ea; color: #1b6b3a; }
+    .tag.mock { background: #eee; color: #555; }
+    table { width: 100%; border-collapse: collapse; font-size: 13px; }
+    th, td { text-align: left; padding: 8px 6px; border-bottom: 1px solid var(--line); vertical-align: top; }
+    th { color: var(--muted); font-size: 11px; letter-spacing: .04em; }
+    .tiles { display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 12px; }
+    .tile { background: #fff; border-radius: 14px; padding: 14px; border: 1px solid var(--line); }
+    .tile .n { font-size: 26px; font-weight: 700; color: var(--navy); }
+    .tile .l { font-size: 12px; color: var(--muted); }
+    .walk { display: flex; gap: 8px; flex-wrap: wrap; margin: 12px 0; }
+    footer.site { background: var(--navy-deep); color: #c9d6ea; text-align: center; padding: 24px; font-size: 12px; }
+  </style>
+</head>
+<body>
+  <div class="poc-bar">
+    <b>POC</b>
+    <span>Does not write to live GHL. Seed data only.</span>
+    <button class="link" data-beat="1">1 House</button>
+    <button class="link" data-beat="2">2 EMS</button>
+    <button class="link" data-beat="3">3 Accept</button>
+    <button class="link" data-beat="4">4 Agent ref</button>
+    <button class="link" data-beat="5">5 Seats</button>
+    <button class="link" data-beat="6">6 Replace</button>
+    <button class="link" data-beat="7">7 Records</button>
+    <button class="link" data-beat="8">8 Admin</button>
+    <button class="link" data-beat="9">9 Measure</button>
+  </div>
+  <header class="site">
+    <div class="logo">WeInsure<br/>Everything.Com<br/><span style="font-weight:500;font-size:9px">Yes, eeeverything!</span></div>
+    <nav class="main">
+      <a href="#/">Home</a>
+      <a href="#/coverage">Coverage Types</a>
+      <a href="#/how">How It Works</a>
+      <a href="#/">About</a>
+      <a href="#/">Agents</a>
+    </nav>
+    <a class="btn-outline" href="#/">Find a Specialist</a>
+  </header>
+  <div id="app"></div>
+  <footer class="site">We Insure Everything LLC. POC for ReferralPro Sprint 1. Not the live site.</footer>
+  <script src="app.js"></script>
+</body>
+</html>
